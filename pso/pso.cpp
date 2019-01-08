@@ -12,10 +12,10 @@ using namespace std;
 
 int main()
 {
-	Particle*p[40];
+	particle*p[40];
 	float w;//实际上是wmax=1.2f;此处设置wmin=0.5;
 
-	Particle*temp;
+	particle*temp;
 	float randX, randY;
 	srand((int)time(NULL));
 	for (int i = 0; i < 40; ++i)
@@ -25,13 +25,13 @@ int main()
 		cout << "randX=" << randX << endl;
 		cout << "randY=" << randY << endl;
 
-		p[i] = new Particle(randX, randY);
+		p[i] = new particle(randX, randY);
 		cout << "The temp info is X:" << p[i]->getX() << " Y:" << p[i]->getY() << endl;
 
 	}
 	//至此，就完成了粒子群的初始化。
   //////////////////////////////////////
-	Coordinate gBest;  //全局最优解。
+	coordinate gBest;  //全局最优解。
 	int bestIndex = 0;
 	float bestP; //最好的适应度。
 	bestP = p[0]->getP();
@@ -71,7 +71,7 @@ int main()
 		{
 			temp = p[i];
 			temp->setV(gBest, w);
-			temp->setCoordinate();
+			temp->setcoordinate();
 			temp->setP();
 			sprintf(buf, "coordinate%d.dat", i);
 			temp->outputFile(buf);
