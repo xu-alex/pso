@@ -3,8 +3,9 @@
 #include <iostream>
 using namespace std;
 /*
-	自己通过测试证明，通过限制速度和位置坐标取得了良好的效果，可以很轻易地达到1e-006的精度以上，
-	甚至于能达到1e-009的精度。原因就在于整个群体中的粒子都能更快地集中到适应度高的位置，自然群体最优解就更好。
+	通过测试证明，限制速度和位置的坐标取得了良好的效果，能很轻易
+	地达到1e-006以上的精度，甚至于能达到1e-009的精度。因为整个
+	群体中的粒子都能更快地集中到适应度高的位置，自然群体最优解就更好。
 */
 float particle::Xmax = 30.0f;   
 float particle::Xmin = 0.0f;
@@ -20,49 +21,53 @@ float particle::Vymin = 0 - Vymax;
 float particle::c1 = 2.0f;
 float particle::c2 = 2.0f;
 
-// 类构造函数的定义
 particle::particle(float x, float y)
 {
+	// 类构造函数的定义
 	c.x = x;
 	c.y = y;
 	// 计算该粒子的初始位置到（10，20）的距离，作为粒子适应度的初值
 	p = pow(c.x - 10.0f, 2) + pow(c.y - 20.0f, 2);
-	Vx = (Xmax - Xmin) / 8.0f;  //////////////////////这里先采用第一种初始化方法，即给所有粒子一个相同的初始速度,为Vmax/8.0f,而Vmax=Xmax-Xmin=30-0=30;注意这个初始速度千万不能太大，自己测试发现它的大小对最终结果的精度影响也很大，有几个数量级。当然，也不能太小，自己测试发现在(Xmax-Xmin)/8.0f时可以得到比较高的精度。
+	/*
+		采用第一种速度初始化方法，即给所有粒子一个相同的初始速度,为Vmax/8.0f,
+		而Vmax=Xmax-Xmin=30-0=30;注意这个初始速度千万不能太大，经测试发现它的
+		大小对最终结果的精度影响也很大，有几个数量级。当然，也不能太小。经测试发现
+		在(Xmax-Xmin)/8.0f时可以得到比较高的精度。
+	*/
+	Vx = (Xmax - Xmin) / 8.0f;  
 	Vy = (Xmax - Xmin) / 8.0f;
 
-	// 将每个粒子的历史最有适应度值初始化
+	// 将每个粒子的历史最优适应度值初始化
 	pBest.x = x;
 	pBest.y = y;
 }
 
 void particle::setP()   
 {
-	/*
-		该函数完成了适应度p的计算，也完成了局部最优pBest的设置
-	*/
+	// 设置粒子的最优解pBest
 	float temp = pow(c.x - 10.0f, 2) + pow(c.y - 20.0f, 2);
 	if (temp < p)
 	{
 		p = temp;
-		//pBest.x=c.x;
-		//pBest.y=c.y;
 		pBest = c;
 	}
 }
 
 float particle::getP() const
 {
+	// 返回粒子的当前适应度值
 	return p;
 }
 
 coordinate particle::getPBest() const
 {
+	// 返回当前粒子的最优解
 	return pBest;
 }
 
 void particle::setV(coordinate gBest, float w)
 {
-	// w为惯性因子
+	// 设置粒子的更新速度
 	float r1, r2;
 	r1 = rand() / (float)RAND_MAX;
 	r2 = rand() / (float)RAND_MAX;
@@ -87,10 +92,9 @@ float particle::getVy()const
 	return Vy;
 }
 
-
-// 必须先进行setV()的操作然后才能进行这步，否则坐标加的就不是第k+1次的速度了。
 void particle::setcoordinate()
 {
+	// 更新粒子的位置
 	c.x = c.x + Vx;
 	if (c.x > Xmax)
 		c.x = Xmax;
@@ -114,7 +118,11 @@ float particle::getY()const
 
 void particle::outputFile(char Dir[])const
 {
-	// 这是添加吧？
+	// 将粒子的当前位置信息和最优位置信息写入文件中并保存
+	/*
+		ios::app表示以追加模式打开文件夹。如果没有文件，那么生成空文件；
+		如果有文件，那么在文件尾追加
+	*/
 	ofstream out(Dir, ios::app);
 
 	out << this->getX() << " " << this->getY() << " " << pBest.x << " " << pBest.y << endl;
@@ -124,6 +132,7 @@ void particle::outputFile(char Dir[])const
 
 ostream& operator<<(ostream &output, const particle &right)
 {
+	// 操作符重载
 	output << "Now the current coordinates is X:" << right.getX() << " Y:" << right.getY() << endl;
 	output << "And the pBest is X:" << right.getPBest().x << " Y:" << right.getPBest().y << endl;
 	return output;
