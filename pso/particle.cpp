@@ -16,6 +16,7 @@ float particle::Vxmin = 0 - Vxmax;
 float particle::Vymax = Ymax - Ymin;
 float particle::Vymin = 0 - Vymax;
 
+// 设置学习因子为常数值
 float particle::c1 = 2.0f;
 float particle::c2 = 2.0f;
 
@@ -24,17 +25,17 @@ particle::particle(float x, float y)
 {
 	c.x = x;
 	c.y = y;
-	// p=100.0f,先给它一个较大的适应度值（这里我们要得到的是一个较小的适应值）。
+	// 计算该粒子的初始位置到（10，20）的距离，作为粒子适应度的初值
 	p = pow(c.x - 10.0f, 2) + pow(c.y - 20.0f, 2);
 	/*
 		这里先采用第一种初始化方法，即给所有粒子一个相同的初始速度,为Vmax/8.0f,而Vmax=Xmax-Xmin=30-0=30;注意这个初始速度千万不能太大,
 		自己测试发现它的大小对最终结果的精度影响也很大，有几个数量级。当然，也不能太小，自己测试发现在(Xmax-Xmin)/8.0f时可以得到比较高的精度。
 	*/
+	// 计算粒子速度的初值
 	Vx = (Xmax - Xmin) / 8.0f;
 	Vy = (Xmax - Xmin) / 8.0f;
 
-	///初始时的pBest
-
+	// 将每个粒子的历史最有适应度值初始化
 	pBest.x = x;
 	pBest.y = y;
 }
@@ -42,7 +43,7 @@ particle::particle(float x, float y)
 void particle::setP()   
 {
 	/*
-	该函数完成了适应度p的设置，也完成了局部最优pBest的设置
+		该函数完成了适应度p的计算，也完成了局部最优pBest的设置
 	*/
 	float temp = pow(c.x - 10.0f, 2) + pow(c.y - 20.0f, 2);
 	if (temp < p)
@@ -54,12 +55,12 @@ void particle::setP()
 	}
 }
 
-float particle::getP()const
+float particle::getP() const
 {
 	return p;
 }
 
-coordinate particle::getPBest()const
+coordinate particle::getPBest() const
 {
 	return pBest;
 }
