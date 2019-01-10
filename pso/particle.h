@@ -12,11 +12,11 @@ class particle
 
 public:
 	particle(float x, float y);  // 类的构造函数
-	void setP();
-	float getP()const;
+	void setP();  // 计算粒子的当前适应度值
+	float getP() const;  // 返回适应度值
 
 	//void setPBest();  //pBest的设置在setP()中就完成了。
-	coordinate getPBest()const;
+	coordinate getPBest()const; // 返回最优适应度对应的解的坐标
 
 	//这是第一种方法，即采用恒定的学习因子。但是实际上可变的学习因子c1,c2
 	//可以使种群更快地收敛。此处，将两个维度的速度设置放在同一个函数中。
@@ -31,9 +31,9 @@ public:
 	void outputFile(char Dir[])const;
 private:
 	coordinate c;
-	float p;  //p为适应度。
-	coordinate pBest;
-	////////////////////二维的话就要有两个速度。
+	float p;  //p 为适应度值。
+	coordinate pBest;  
+	// 二维的话就要有两个速度。
 	float Vx;
 	float Vy;
 	static float Xmax, Xmin;
