@@ -1,5 +1,6 @@
 ﻿// pso.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
-//
+// 在40*40的平面直角坐标区域内寻找距离点(10,20)最近的点为例说明PSO的算例。
+// 代码来源：https://blog.csdn.net/bettarwang/article/details/12179995s
 #include "pch.h"
 #include <iostream>
 #include "particle.h"
@@ -18,9 +19,8 @@ using namespace std;
 */
 int main()
 {
-	/******************************粒子群初始化*********************************/
-	particle* p[40];  // 设定粒子群内的个体数
-	float w;// 惯性因子，实际上是wmax=1.2f;此处设置wmin=0.5;
+	particle*p[40];
+	float w;//实际上是wmax=1.2f;此处设置wmin=0.5;
 
 	particle* temp;
 	float randX, randY; // 随机参数
@@ -35,13 +35,14 @@ int main()
 		p[i] = new particle(randX, randY); // 调用自定义的类初始化函数
 		cout << "The temp info is X:" << p[i]->getX() << " Y:" << p[i]->getY() << endl;
 	}
-	/**********计算适应度p、每个粒子的pbest和以及种群最优粒子gbest，寻找最初的种群最优************/
-	coordinate gBest;  // 全局最优解的位置
-	int bestIndex = 0;   // 
-	float bestP; // 最优的适应度值
-	bestP = p[0]->getP();  // 函数返回最优适应度值
-	gBest = p[0]->getPBest();  // 函数返回最优适应度值对应的粒子的坐标
-	for (int i = 1; i < 40; ++i) // 对比粒子群里每个粒子的适应度值
+	//至此，就完成了粒子群的初始化。
+  //////////////////////////////////////
+	coordinate gBest;  //全局最优解。
+	int bestIndex = 0;
+	float bestP; //最好的适应度。
+	bestP = p[0]->getP();
+	gBest = p[0]->getPBest();
+	for (int i = 1; i < 40; ++i)
 	{
 		/*通过循环对比，判断粒子群的最优适应度值及其对应的粒子*/
 		if (p[i]->getP() < bestP)
